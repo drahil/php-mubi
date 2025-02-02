@@ -1,0 +1,19 @@
+{
+    "name": "drahil/php-mubi",
+    "description": "A CLI tool to retrieve and analyze Mubi profile data. It allows users to fetch statistics about their watched films, including most-watched directors, favorite genres, highest-rated films, and more, providing insightful summaries of their viewing habits.",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "drahil\\PhpMubi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Omar Djecevic",
+            "email": "djecevic.omar@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "bin": ["bin/mubi-stats.php"]
+}
