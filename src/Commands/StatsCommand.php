@@ -19,7 +19,8 @@ class StatsCommand
     public function run()
     {
         $url = $this->profileService->getProfileUrl();
-        $profileId = $this->profileService->getProfileId($url);
+        $profileId = $this->profileService->getProfileId('https://mubi.com/en/users/12559036');
         $movies = $this->movieService->getMovies($profileId);
+        $this->movieService->saveMovies($movies);
     }
 }
