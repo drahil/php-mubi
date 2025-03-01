@@ -4,7 +4,7 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use drahil\PhpMubi\Commands\StatsCommand;
+use drahil\MubiStats\Commands\StatsCommand;
 
 set_error_handler(function ($severity, $message, $file, $line) {
     throw new ErrorException($message, 0, $severity, $file, $line);

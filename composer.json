@@ -4,7 +4,7 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "drahil\\PhpMubi\\": "src/"
+            "drahil\\MubiStats\\": "src/"
         }
     },
     "authors": [

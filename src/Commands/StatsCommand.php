@@ -1,9 +1,9 @@
 <?php
 
-namespace drAhil\PhpMubi\Commands;
+namespace drAhil\MubiStats\Commands;
 
-use drahil\PhpMubi\Services\MovieService;
-use drahil\PhpMubi\Services\MubiProfileService;
+use drahil\MubiStats\Services\MovieService;
+use drahil\MubiStats\Services\MubiProfileService;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 

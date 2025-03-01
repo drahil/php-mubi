@@ -1,6 +1,6 @@
 <?php
 
-namespace drahil\PhpMubi\Services;
+namespace drahil\MubiStats\Services;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
