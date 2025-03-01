@@ -3,21 +3,30 @@
 namespace drahil\PhpMubi\Services;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 
 class MovieService
 {
+    private int $perPage = 100;
+
+    /**
+     * Get movies from Mubi API.
+     *
+     * @param string $profileId
+     * @return array
+     * @throws GuzzleException
+     */
     public function getMovies(string $profileId): array
     {
-        $perPage = 100;
         $client = new Client();
-        
+
         $response = $client->get("https://api.mubi.com/v3/users/{$profileId}/ratings", [
             'headers' => [
                 'client' => 'web',
                 'client-country' => 'ME'
             ],
             'query' => [
-                'per_page' => $perPage
+                'per_page' => $this->perPage
             ]
         ]);
 
@@ -35,7 +44,7 @@ class MovieService
                 ],
                 'query' => [
                     'before' => $nextCursor,
-                    'per_page' => $perPage
+                    'per_page' => $this->perPage
                 ]
             ]);
 
@@ -47,5 +56,24 @@ class MovieService
         } while ($nextCursor !== null);
 
         return $data;
+    }
+
+    /**
+     * Save movies to a JSON file.
+     *
+     * @param array $movies
+     * @return true
+     * @throws \Exception
+     */
+    public function saveMovies(array $movies): true
+    {
+        try {
+            $jsonData = json_encode($movies, JSON_PRETTY_PRINT);
+            file_put_contents('mubi.json', $jsonData);
+
+            return true;
+        } catch (\Exception $e) {
+            throw new \Exception('Failed to save movies to a file.');
+        }
     }
 }
