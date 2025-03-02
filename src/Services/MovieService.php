@@ -2,6 +2,7 @@
 
 namespace drahil\MubiStats\Services;
 
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -18,6 +19,10 @@ class MovieService
      */
     public function getMovies(string $profileId): array
     {
+        if (file_exists($profileId . '.json')) {
+            return json_decode(file_get_contents($profileId . '.json'), true);
+        }
+
         $client = new Client();
 
         $response = $client->get("https://api.mubi.com/v3/users/{$profileId}/ratings", [
@@ -62,18 +67,19 @@ class MovieService
      * Save movies to a JSON file.
      *
      * @param array $movies
+     * @param string $profileId
      * @return true
-     * @throws \Exception
+     * @throws Exception
      */
-    public function saveMovies(array $movies): true
+    public function saveMovies(array $movies, string $profileId): true
     {
         try {
             $jsonData = json_encode($movies, JSON_PRETTY_PRINT);
-            file_put_contents('mubi.json', $jsonData);
+            file_put_contents($profileId . '.json', $jsonData);
 
             return true;
-        } catch (\Exception $e) {
-            throw new \Exception('Failed to save movies to a file.');
+        } catch (Exception $e) {
+            throw new Exception('Failed to save movies to a file.');
         }
     }
 }

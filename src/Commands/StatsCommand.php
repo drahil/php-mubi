@@ -49,6 +49,6 @@ class StatsCommand
         $profileId = $this->profileService->getProfileId($url);
         $movies = $this->movieService->getMovies($profileId);
 
-        return $this->movieService->saveMovies($movies);
+        return $this->movieService->saveMovies($movies, $profileId);
     }
 }
