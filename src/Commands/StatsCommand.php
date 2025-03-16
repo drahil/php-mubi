@@ -4,6 +4,7 @@ namespace drAhil\MubiStats\Commands;
 
 use drahil\MubiStats\Services\MovieService;
 use drahil\MubiStats\Services\MubiProfileService;
+use drahil\MubiStats\Services\StatsService;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -11,12 +12,14 @@ class StatsCommand
 {
     private MubiProfileService $profileService;
     private MovieService $movieService;
+    private StatsService $statsService;
 
 
     public function __construct()
     {
         $this->profileService = new MubiProfileService();
         $this->movieService = new MovieService();
+        $this->statsService = new StatsService();
     }
 
     /**
@@ -33,7 +36,8 @@ class StatsCommand
             return 0;
         }
 
-        echo 'Movies saved successfully.' . PHP_EOL;
+        $action = $this->choseAction();
+        $this->handleAction($action);
     }
 
 
@@ -50,5 +54,39 @@ class StatsCommand
         $movies = $this->movieService->getMovies($profileId);
 
         return $this->movieService->saveMovies($movies, $profileId);
+    }
+
+    /**
+     * Print possible actions.
+     */
+    private function choseAction(): string
+    {
+        echo 'Possible actions:' . PHP_EOL;
+        echo '1. Get movies by country' . PHP_EOL;
+        echo '2. Get movies by director' . PHP_EOL;
+        echo '3. Get movies by genre' . PHP_EOL;
+        echo '4. Get stats' . PHP_EOL;
+
+        return trim(fgets(STDIN));
+    }
+
+    private function handleAction(string $action)
+    {
+        switch ($action) {
+            case '1':
+                $this->statsService->getMoviesByCountry();
+                break;
+            case '2':
+                $this->statsService->getMoviesByDirector();
+                break;
+            case '3':
+                $this->statsService->getMoviesByGenre();
+                break;
+            case '4':
+                $this->statsService->getStats();
+                break;
+            default:
+                echo 'Invalid action.' . PHP_EOL;
+        }
     }
 }

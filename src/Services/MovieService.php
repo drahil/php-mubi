@@ -2,6 +2,7 @@
 
 namespace drahil\MubiStats\Services;
 
+use drahil\MubiStats\Singletons\MovieDataSingleton;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -9,6 +10,13 @@ use GuzzleHttp\Exception\GuzzleException;
 class MovieService
 {
     private int $perPage = 100;
+    private MovieDataSingleton $movieDataSingleton;
+
+
+    public function __construct()
+    {
+        $this->movieDataSingleton = MovieDataSingleton::getInstance();
+    }
 
     /**
      * Get movies from Mubi API.
@@ -19,8 +27,10 @@ class MovieService
      */
     public function getMovies(string $profileId): array
     {
-        if (file_exists($profileId . '.json')) {
-            return json_decode(file_get_contents($profileId . '.json'), true);
+        if (file_exists('movies.json')) {
+            $movieData = json_decode(file_get_contents('movies.json'), true);
+            $this->movieDataSingleton->setMovieData($movieData);
+            return $movieData;
         }
 
         $client = new Client();
@@ -71,11 +81,13 @@ class MovieService
      * @return true
      * @throws Exception
      */
-    public function saveMovies(array $movies, string $profileId): true
+    public function saveMovies(array $movies, string $profileId): bool
     {
         try {
             $jsonData = json_encode($movies, JSON_PRETTY_PRINT);
-            file_put_contents($profileId . '.json', $jsonData);
+            file_put_contents('movies.json', $jsonData);
+
+            $this->movieDataSingleton->setMovieData($movies);
 
             return true;
         } catch (Exception $e) {
