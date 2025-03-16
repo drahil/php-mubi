@@ -31,6 +31,18 @@ class StatsService
     }
 
     /**
+     * Get movies by director.
+     *
+     * @return void
+     */
+    public function getMoviesByDirector(): void
+    {
+        echo "Enter director: ";
+        $director = trim(fgets(STDIN));
+        $this->getStatsByOption('director', $director);
+    }
+
+    /**
      * Get movies by option.
      *
      * @param $originalOption

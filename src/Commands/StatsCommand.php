@@ -67,6 +67,8 @@ class StatsCommand
         echo '3. Get movies by genre' . PHP_EOL;
         echo '4. Get stats' . PHP_EOL;
 
+        echo 'Choose action: ';
+
         return trim(fgets(STDIN));
     }
 
