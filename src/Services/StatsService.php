@@ -43,6 +43,18 @@ class StatsService
     }
 
     /**
+     * Get movies by genre.
+     *
+     * @return void
+     */
+    public function getMoviesByGenre(): void
+    {
+        echo "Enter genre: ";
+        $genre = trim(fgets(STDIN));
+        $this->getStatsByOption('genre', $genre);
+    }
+
+    /**
      * Get movies by option.
      *
      * @param $originalOption
@@ -52,14 +64,18 @@ class StatsService
     public function getStatsByOption($originalOption, $value): void
     {
         $option = $this->mapOptionToMubiArray($originalOption);
-        $movieByOption = array_filter($this->movieData, function($movie) use ($option, $value) {
+        $lowerValue = mb_strtolower($value);
+
+        $movieByOption = array_filter($this->movieData, function ($movie) use ($option, $lowerValue) {
             $data = $movie['film'][$option];
 
             if ($option === 'directors') {
                 $data = array_column($data, 'name');
             }
 
-            return in_array($value, $data);
+            $lowerData = array_map('mb_strtolower', $data);
+
+            return in_array($lowerValue, $lowerData, true);
         });
 
         echo "Filter: $originalOption. Value: $value\n";
@@ -67,7 +83,7 @@ class StatsService
             echo "{$movie['film']['title']}\n";
         }
     }
-
+    
     /**
      * Map option to Mubi array.
      *
