@@ -2,20 +2,24 @@
 
 namespace drahil\MubiStats\Services;
 
-use drahil\MubiStats\Singletons\MovieDataSingleton;
-use Exception;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-
 class StatsService
 {
-    private MovieDataSingleton $movieDataSingleton;
     private array $movieData;
 
     public function __construct()
     {
-        $this->movieDataSingleton = MovieDataSingleton::getInstance();
-        $this->movieData = $this->movieDataSingleton->getMovieData();
+        $this->movieData = [];
+    }
+
+    /**
+     * Set movies data.
+     *
+     * @param array $movieData
+     * @return void
+     */
+    public function setMoviesData(array $movieData): void
+    {
+        $this->movieData = $movieData;
     }
 
     /**
@@ -83,7 +87,7 @@ class StatsService
             echo "{$movie['film']['title']}\n";
         }
     }
-    
+
     /**
      * Map option to Mubi array.
      *
@@ -168,7 +172,7 @@ class StatsService
                 echo 'Invalid option';
         }
     }
-    
+
     /**
      * Get top directors.
      *

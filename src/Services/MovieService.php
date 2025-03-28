@@ -10,13 +10,6 @@ use GuzzleHttp\Exception\GuzzleException;
 class MovieService
 {
     private int $perPage = 100;
-    private MovieDataSingleton $movieDataSingleton;
-
-
-    public function __construct()
-    {
-        $this->movieDataSingleton = MovieDataSingleton::getInstance();
-    }
 
     /**
      * Get movies from Mubi API.
@@ -29,7 +22,7 @@ class MovieService
     {
         if (file_exists('movies.json')) {
             $movieData = json_decode(file_get_contents('movies.json'), true);
-            $this->movieDataSingleton->setMovieData($movieData);
+            MovieDataSingleton::getInstance()->setMovieData($movieData);
             return $movieData;
         }
 
@@ -87,7 +80,9 @@ class MovieService
             $jsonData = json_encode($movies, JSON_PRETTY_PRINT);
             file_put_contents('movies.json', $jsonData);
 
-            $this->movieDataSingleton->setMovieData($movies);
+            MovieDataSingleton::getInstance()->setMovieData($movies);
+
+            var_dump('save movies');
 
             return true;
         } catch (Exception $e) {
