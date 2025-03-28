@@ -31,7 +31,7 @@ class MovieService
         $response = $client->get("https://api.mubi.com/v3/users/{$profileId}/ratings", [
             'headers' => [
                 'client' => 'web',
-                'client-country' => 'ME'
+                'client-country' => 'US'
             ],
             'query' => [
                 'per_page' => $this->perPage
@@ -81,9 +81,7 @@ class MovieService
             file_put_contents('movies.json', $jsonData);
 
             MovieDataSingleton::getInstance()->setMovieData($movies);
-
-            var_dump('save movies');
-
+            
             return true;
         } catch (Exception $e) {
             throw new Exception('Failed to save movies to a file.');
