@@ -1,6 +1,6 @@
 <?php
 
-namespace drAhil\MubiStats\Commands;
+namespace drahil\MubiStats\Commands;
 
 use drahil\MubiStats\Services\MovieService;
 use drahil\MubiStats\Services\MubiProfileService;
@@ -40,14 +40,13 @@ class StatsCommand
         $this->handleAction($action);
     }
 
-
     /**
      * Save movies from Mubi profile.
-     * @return true
+     * @return bool
      * @throws GuzzleException
      * @throws Exception
      */
-    private function getMoviesFromProfile(): true
+    private function getMoviesFromProfile(): bool
     {
         $url = $this->profileService->getProfileUrl();
         $profileId = $this->profileService->getProfileId($url);
@@ -62,9 +61,9 @@ class StatsCommand
     private function choseAction(): string
     {
         echo 'Possible actions:' . PHP_EOL;
-        echo '1. Get movies by country' . PHP_EOL;
-        echo '2. Get movies by director' . PHP_EOL;
-        echo '3. Get movies by genre' . PHP_EOL;
+        echo '1. Search movies by country' . PHP_EOL;
+        echo '2. Search movies by director' . PHP_EOL;
+        echo '3. Search movies by genre' . PHP_EOL;
         echo '4. Get stats' . PHP_EOL;
 
         echo 'Choose action: ';

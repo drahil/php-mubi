@@ -100,4 +100,87 @@ class StatsService
 
         return $options[$option];
     }
+
+    public function getStats(): void
+    {
+        $this->printPossibleStats();
+        $statsOption = $this->choseStats();
+        $this->executeOption($statsOption);
+    }
+
+    private function printPossibleStats(): void
+    {
+        echo 'Possible stats:' . PHP_EOL;
+        echo '1. Top directors' . PHP_EOL;
+        echo '2. Top countries' . PHP_EOL;
+        echo '3. Top genres' . PHP_EOL;
+        echo '4. Rating by movie duration' . PHP_EOL;
+    }
+
+    private function choseStats(): string
+    {
+        $possibleOptions = [1, 2, 3, 4];
+        $statsOption = trim(fgets(STDIN));
+        while (!in_array($statsOption, $possibleOptions)) {
+            $statsOption = trim(fgets(STDIN));
+        }
+
+        return $statsOption;
+    }
+
+    public function executeOption(mixed $statsOption): void
+    {
+        switch ($statsOption) {
+            case '1':
+                $this->getTopDirectors();
+                break;
+            case '2':
+                $this->getTopCountries();
+                break;
+            case '3':
+                $this->getTopGenres();
+                break;
+            case '4':
+                $this->ratingByDuration();
+                break;
+            default:
+                echo 'Invalid option';
+        }
+    }
+
+    public function getTopDirectors(): void
+    {
+        $this->printTopItems('directors', 'name', 'Top Directors');
+    }
+
+    public function getTopCountries(): void
+    {
+        $this->printTopItems('historic_countries', null, 'Top Countries');
+    }
+
+    public function getTopGenres(): void
+    {
+        $this->printTopItems('genres', null, 'Top Genres');
+    }
+
+    public function printTopItems(string $key, ?string $subKey, string $title): void
+    {
+        $items = [];
+
+        foreach ($this->movieData as $movie) {
+            $data = $movie['film'][$key];
+            if ($subKey) {
+                $data = array_column($data, $subKey);
+            }
+            $items = array_merge($items, $data);
+        }
+
+        $itemCounts = array_count_values($items);
+        arsort($itemCounts);
+
+        echo "$title:\n";
+        foreach (array_slice($itemCounts, 0, 10, true) as $item => $count) {
+            echo "{$item}: {$count}\n";
+        }
+    }
 }
