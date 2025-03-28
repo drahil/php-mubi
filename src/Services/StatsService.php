@@ -101,6 +101,11 @@ class StatsService
         return $options[$option];
     }
 
+    /**
+     * Get stats.
+     *
+     * @return void
+     */
     public function getStats(): void
     {
         $this->printPossibleStats();
@@ -108,6 +113,11 @@ class StatsService
         $this->executeOption($statsOption);
     }
 
+    /**
+     * Print possible stats.
+     *
+     * @return void
+     */
     private function printPossibleStats(): void
     {
         echo 'Possible stats:' . PHP_EOL;
@@ -117,6 +127,11 @@ class StatsService
         echo '4. Rating by movie duration' . PHP_EOL;
     }
 
+    /**
+     * Chose stats.
+     *
+     * @return string
+     */
     private function choseStats(): string
     {
         $possibleOptions = [1, 2, 3, 4];
@@ -128,6 +143,12 @@ class StatsService
         return $statsOption;
     }
 
+    /**
+     * Execute option.
+     *
+     * @param mixed $statsOption
+     * @return void
+     */
     public function executeOption(mixed $statsOption): void
     {
         switch ($statsOption) {
@@ -147,22 +168,45 @@ class StatsService
                 echo 'Invalid option';
         }
     }
-
+    
+    /**
+     * Get top directors.
+     *
+     * @return void
+     */
     public function getTopDirectors(): void
     {
         $this->printTopItems('directors', 'name', 'Top Directors');
     }
 
+    /**
+     * Get top countries.
+     *
+     * @return void
+     */
     public function getTopCountries(): void
     {
         $this->printTopItems('historic_countries', null, 'Top Countries');
     }
 
+    /**
+     * Get top genres.
+     *
+     * @return void
+     */
     public function getTopGenres(): void
     {
         $this->printTopItems('genres', null, 'Top Genres');
     }
 
+    /**
+     * Print top items.
+     *
+     * @param string $key
+     * @param string|null $subKey
+     * @param string $title
+     * @return void
+     */
     public function printTopItems(string $key, ?string $subKey, string $title): void
     {
         $items = [];
@@ -179,8 +223,49 @@ class StatsService
         arsort($itemCounts);
 
         echo "$title:\n";
-        foreach (array_slice($itemCounts, 0, 10, true) as $item => $count) {
+        foreach (array_slice($itemCounts, 0, 30, true) as $item => $count) {
             echo "{$item}: {$count}\n";
         }
+    }
+
+    /**
+     * Rating by duration.
+     *
+     * @return void
+     */
+    public function ratingByDuration(): void
+    {
+        $ratings = [];
+
+        foreach ($this->movieData as $movie) {
+            $duration = $this->floorToNearestTen($movie['film']['duration']);
+            $rating = $movie['overall'];
+
+            if ($duration > 180) {
+                $duration = 180;
+            }
+
+            if (!array_key_exists($duration, $ratings)) {
+                $ratings[$duration] = [];
+            }
+
+            $ratings[$duration][] = $rating;
+        }
+
+        foreach ($ratings as $duration => $rating) {
+            $averageRating = array_sum($rating) / count($rating);
+            echo "Duration: $duration. Average rating: $averageRating\n";
+        }
+    }
+
+    /**
+     * Floor to nearest ten.
+     *
+     * @param $number
+     * @return float|int
+     */
+    private function floorToNearestTen($number): float|int
+    {
+        return floor($number / 10) * 10;
     }
 }
