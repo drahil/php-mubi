@@ -20,9 +20,9 @@ class MovieService
      */
     public function getMovies(string $profileId): array
     {
-        if (file_exists('movies.json')) {
-            $movieData = json_decode(file_get_contents('movies.json'), true);
-            MovieDataSingleton::getInstance()->setMovieData($movieData);
+        if (file_exists("movies_{$profileId}.json")) {
+            $movieData = json_decode(file_get_contents("movies_{$profileId}.json"), true);
+            MovieDataSingleton::getInstance($profileId)->setMovieData($movieData, $profileId);
             return $movieData;
         }
 
@@ -41,7 +41,7 @@ class MovieService
         $initialData = json_decode($response->getBody(), true);
 
         $nextCursor = $initialData['meta']['next_cursor'];
-        $data = $initialData['ratings'];
+        $movieData = $initialData['ratings'];
 
         do {
             $response = $client->get(
@@ -60,10 +60,11 @@ class MovieService
 
             $nextCursor = $newData['meta']['next_cursor'];
 
-            $data = array_merge($data, $newData['ratings']);
+            $movieData = array_merge($movieData, $newData['ratings']);
         } while ($nextCursor !== null);
 
-        return $data;
+        MovieDataSingleton::getInstance($profileId)->setMovieData($movieData, $profileId);
+        return $movieData;
     }
 
     /**
@@ -78,10 +79,11 @@ class MovieService
     {
         try {
             $jsonData = json_encode($movies, JSON_PRETTY_PRINT);
-            file_put_contents('movies.json', $jsonData);
+            $fileName = "movies_{$profileId}.json";
+            file_put_contents($fileName, $jsonData);
 
-            MovieDataSingleton::getInstance()->setMovieData($movies);
-            
+            MovieDataSingleton::getInstance($profileId)->setMovieData($movies, $profileId);
+
             return true;
         } catch (Exception $e) {
             throw new Exception('Failed to save movies to a file.');

@@ -6,12 +6,15 @@ class MovieDataSingleton
 {
     private static ?MovieDataSingleton $instance = null;
     private array $movieData;
+    private string $profileId;
 
-    private function __construct()
+    private function __construct(string $profileId)
     {
-        $filePath = 'movies.json';
+        $this->profileId = $profileId;
+        $filePath = "movies_{$profileId}.json";
 
         if (file_exists($filePath)) {
+            var_dump("Loading movie data from file: $filePath");
             $jsonData = file_get_contents($filePath);
             $this->movieData = json_decode($jsonData, true) ?? [];
         } else {
@@ -19,10 +22,10 @@ class MovieDataSingleton
         }
     }
 
-    public static function getInstance(): MovieDataSingleton
+    public static function getInstance(string $profileId): MovieDataSingleton
     {
         if (self::$instance === null) {
-            self::$instance = new MovieDataSingleton();
+            self::$instance = new MovieDataSingleton($profileId);
         }
 
         return self::$instance;
@@ -33,9 +36,10 @@ class MovieDataSingleton
         return $this->movieData;
     }
 
-    public function setMovieData(array $movieData): void
+    public function setMovieData(array $movieData , string $profileId): void
     {
         $this->movieData = $movieData;
-        file_put_contents('movies.json', json_encode($movieData, JSON_PRETTY_PRINT));
+        $fileName = "movies_{$profileId}.json";
+        file_put_contents($fileName, json_encode($movieData, JSON_PRETTY_PRINT));
     }
 }

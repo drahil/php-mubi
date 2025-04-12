@@ -52,6 +52,7 @@ class StatsCommand
         $url = $this->profileService->getProfileUrl();
         $profileId = $this->profileService->getProfileId($url);
         $movies = $this->movieService->getMovies($profileId);
+        $this->statsService->setMoviesData(MovieDataSingleton::getInstance($profileId)->getMovieData());
 
         return $this->movieService->saveMovies($movies, $profileId);
     }
@@ -79,8 +80,6 @@ class StatsCommand
      */
     private function handleAction(string $action): void
     {
-        $this->statsService->setMoviesData(MovieDataSingleton::getInstance()->getMovieData());
-
         switch ($action) {
             case '1':
                 $this->statsService->getMoviesByCountry();
@@ -95,6 +94,7 @@ class StatsCommand
                 $this->statsService->getStats();
                 break;
             default:
+                var_dump($action);
                 echo 'Invalid action.' . PHP_EOL;
         }
     }
