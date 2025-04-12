@@ -36,10 +36,10 @@ class MovieDataSingleton
         return $this->movieData;
     }
 
-    public function setMovieData(array $movieData , string $profileId): void
+    public function setMovieData(array $movieData): void
     {
         $this->movieData = $movieData;
-        $fileName = "movies_{$profileId}.json";
+        $fileName = "movies_{$this->profileId}.json";
         file_put_contents($fileName, json_encode($movieData, JSON_PRETTY_PRINT));
     }
 }

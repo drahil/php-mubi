@@ -139,10 +139,12 @@ class StatsService
     private function choseStats(): string
     {
         $possibleOptions = [1, 2, 3, 4];
-        $statsOption = trim(fgets(STDIN));
-        while (!in_array($statsOption, $possibleOptions)) {
+
+        do {
+            echo "Choose option: ";
             $statsOption = trim(fgets(STDIN));
-        }
+
+        } while (!in_array($statsOption, $possibleOptions));
 
         return $statsOption;
     }
