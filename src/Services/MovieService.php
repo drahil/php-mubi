@@ -2,7 +2,7 @@
 
 namespace drahil\MubiStats\Services;
 
-use drahil\MubiStats\Singletons\MovieDataSingleton;
+use drahil\MubiStats\Data\MovieData;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -22,7 +22,7 @@ class MovieService
     {
         if (file_exists("movies_{$profileId}.json")) {
             $movieData = json_decode(file_get_contents("movies_{$profileId}.json"), true);
-            MovieDataSingleton::getInstance($profileId)->setMovieData($movieData);
+            MovieData::getInstance($profileId)->setMovieData($movieData);
             return $movieData;
         }
 
@@ -63,7 +63,7 @@ class MovieService
             $movieData = array_merge($movieData, $newData['ratings']);
         } while ($nextCursor !== null);
 
-        MovieDataSingleton::getInstance($profileId)->setMovieData($movieData);
+        MovieData::getInstance($profileId)->setMovieData($movieData);
         return $movieData;
     }
 
@@ -82,7 +82,7 @@ class MovieService
             $fileName = "movies_{$profileId}.json";
             file_put_contents($fileName, $jsonData);
 
-            MovieDataSingleton::getInstance($profileId)->setMovieData($movies);
+            MovieData::getInstance($profileId)->setMovieData($movies);
 
             return true;
         } catch (Exception $e) {

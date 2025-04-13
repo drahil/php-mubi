@@ -5,7 +5,7 @@ namespace drahil\MubiStats\Commands;
 use drahil\MubiStats\Services\MovieService;
 use drahil\MubiStats\Services\MubiProfileService;
 use drahil\MubiStats\Services\StatsService;
-use drahil\MubiStats\Singletons\MovieDataSingleton;
+use drahil\MubiStats\Data\MovieData;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -30,15 +30,17 @@ class StatsCommand
      */
     public function run()
     {
-        $moviesSaved = $this->getMoviesFromProfile();
+        do {
+            $moviesSaved = $this->getMoviesFromProfile();
 
-        if (!$moviesSaved) {
-            echo 'No movies saved.' . PHP_EOL;
-            return 0;
-        }
+            if (!$moviesSaved) {
+                echo 'No movies saved.' . PHP_EOL;
+                return 0;
+            }
 
-        $action = $this->choseAction();
-        $this->handleAction($action);
+            $action = $this->choseAction();
+            $this->handleAction($action);
+        } while (true);
     }
 
     /**
@@ -52,7 +54,7 @@ class StatsCommand
         $url = $this->profileService->getProfileUrl();
         $profileId = $this->profileService->getProfileId($url);
         $movies = $this->movieService->getMovies($profileId);
-        $this->statsService->setMoviesData(MovieDataSingleton::getInstance($profileId)->getMovieData());
+        $this->statsService->setMoviesData(MovieData::getInstance($profileId)->getMovieData());
 
         return $this->movieService->saveMovies($movies, $profileId);
     }

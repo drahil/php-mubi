@@ -1,10 +1,10 @@
 <?php
 
-namespace drahil\MubiStats\Singletons;
+namespace drahil\MubiStats\Data;
 
-class MovieDataSingleton
+class MovieData
 {
-    private static ?MovieDataSingleton $instance = null;
+    private static ?MovieData $instance = null;
     private array $movieData;
     private string $profileId;
 
@@ -22,20 +22,37 @@ class MovieDataSingleton
         }
     }
 
-    public static function getInstance(string $profileId): MovieDataSingleton
+    /**
+     * Get the singleton instance of MovieData.
+     *
+     * @param string $profileId
+     * @return MovieData
+     */
+    public static function getInstance(string $profileId): MovieData
     {
         if (self::$instance === null) {
-            self::$instance = new MovieDataSingleton($profileId);
+            self::$instance = new MovieData($profileId);
         }
 
         return self::$instance;
     }
 
+    /**
+     * Get the movie data.
+     *
+     * @return array
+     */
     public function getMovieData(): array
     {
         return $this->movieData;
     }
 
+    /**
+     * Set the movie data and save it to a file.
+     *
+     * @param array $movieData
+     * @return void
+     */
     public function setMovieData(array $movieData): void
     {
         $this->movieData = $movieData;
