@@ -5,6 +5,7 @@
 ⚠️ Note: This is not intended as a production-grade or heavily-tested package. It's just a fun side project for movie lovers.
 
 🎬 What Can It Do?
+
 Once you run the tool, you’ll be prompted with options like:
 Possible actions:
 1. Search movies by country
@@ -20,11 +21,13 @@ Possible stats:
 4. Rating by movie duration
 
 🛠 Installation
+
 You can install it using Composer:
 
 `composer require drahil/php-mubi:dev-main`
 
 🚀 Usage
+
 Just run the CLI script:
 
 `vendor/bin/mubi-stats.php`
